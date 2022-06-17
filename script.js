@@ -1,5 +1,8 @@
 const $container = document.querySelector('.container');
 let $card = '';
+let _class = [];
+let _card;
+let round = 0;
 
 let num_cards = 0;
 let final_list = []
@@ -12,6 +15,7 @@ let list_gifs = [
     'tripletsparrot', 
     'unicornparrot'
 ]
+
 
 window.onload = init_game;
 
@@ -28,7 +32,8 @@ function init_game(){
                 set_random_cards(num_cards, shuffle_list(list_gifs));
                 $card = document.getElementsByClassName('card')
                 $card = [...$card]
-                $card.map(card => card.addEventListener('click', select_card)) 
+                // $card.map(card => card.addEventListener('click', select_card)) 
+                $card.map(card => card.addEventListener('click', game))
                 break;
             }
             else{
@@ -42,25 +47,77 @@ function init_game(){
 }
 
 
-function select_card(e){
-
+async function game(e){
+    
+    round++;
     let card = e.currentTarget
-    let child_card = card.childNodes
+    
+    if(_class.length === 1){
+        if(_class[0] === get_classe(card)){
+            
+            gif_up(card)
 
-    if(card.classList.contains('selected')){
-        child_card[0].style.transform = 'rotateY(0deg)'
-        child_card[1].style.transform = 'rotateY(180deg)'
-        card.classList.remove('selected')
+            card.removeEventListener('click', game)
+            _card.removeEventListener('click', game)
+
+            _class.pop()
+            _card = ''
+        }
+        else{
+            
+            gif_up(card)   
+            
+            await sleep(1000)
+            gif_down(_card) 
+            gif_down(card) 
+            
+            _class.pop() 
+            _card = ''
+        }
     }
     else{
-        child_card[0].style.transform = 'rotateY(-180deg)'
-        child_card[1].style.transform = 'rotateY(0deg)'
-        card.classList.add('selected');
+        _class.push(get_classe(card))
+        _card = card
+
+        gif_up(card)        
     }
 }
 
 
+function get_classe(card){
 
+    let classe = card.getAttribute('class')
+    classe = classe.split(' ')[1]
+    return classe;
+}
+
+
+function gif_up(card){
+    card = card.childNodes
+    card[0].style.transform = 'rotateY(-180deg)'
+    card[1].style.transform = 'rotateY(0deg)'
+}
+
+function gif_down(card){
+    card = card.childNodes
+    card[0].style.transform = 'rotateY(0deg)'
+    card[1].style.transform = 'rotateY(180deg)'
+
+}
+
+// function select_card(e){
+
+//     let card = e.currentTarget
+
+//     if(card.classList.contains('selected')){
+//         front_card_up(card)
+//         card.classList.remove('selected')
+//     }
+//     else{
+//         back_card_up(card)
+//         card.classList.add('selected');
+//     }
+// }
 
 
 function getRandomIntInclusive(min, max) {
@@ -99,22 +156,21 @@ function set_random_cards(num_cards, list_gifs){
 
         let div_card_parrot1 = document.createElement('div');
         div_card_parrot1.classList.add('card')
+        div_card_parrot1.classList.add(`${list_gifs[i]}`)
 
         let front_card_parrot1 = document.createElement('div');
         front_card_parrot1.classList.add('face')
-        front_card_parrot1.classList.add('front_card')
 
         let back_card_parrot1 = document.createElement('div');
         back_card_parrot1.classList.add('back_card')
         back_card_parrot1.classList.add('face')
 
 
-
         let div_card_parrot2 = document.createElement('div');
         div_card_parrot2.classList.add('card')
+        div_card_parrot2.classList.add(`${list_gifs[i]}`)
 
         let front_card_parrot2 = document.createElement('div');
-        front_card_parrot2.classList.add('front_card')
         front_card_parrot2.classList.add('face')
 
         let back_card_parrot2 = document.createElement('div');
@@ -150,4 +206,10 @@ function set_random_cards(num_cards, list_gifs){
     
     random_list.push(shuffle_list(list_gif))
     random_list[0].map( element => $container.appendChild(element)) 
+}
+
+
+
+function sleep(milliseconds) {
+    return new Promise(resolve => setTimeout(resolve, milliseconds))
 }

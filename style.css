@@ -50,29 +50,11 @@ h1{
 }
 
 .selected{
-
 }
-
 
 .back_card{
     transform: rotateY(180deg);
-  }
-
-/* .bk_cd{
-
 }
-
-.ft_cd{
-    transform: rotateY(-180deg);
-} */
-
-/* .card:hover .back_card {
-    transform: rotateY(0deg);
-}
-
-.card:hover .front_card {
-    transform: rotateY(-180deg);
-} */
 
 img{
     width: 100px;
