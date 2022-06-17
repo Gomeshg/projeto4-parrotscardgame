@@ -1,4 +1,6 @@
 const $container = document.querySelector('.container');
+let $card = '';
+
 let num_cards = 0;
 let final_list = []
 let list_gifs = [
@@ -10,7 +12,6 @@ let list_gifs = [
     'tripletsparrot', 
     'unicornparrot'
 ]
-
 
 window.onload = init_game;
 
@@ -25,6 +26,9 @@ function init_game(){
             if(num_cards >= 4  && num_cards <= 14){
                 num_cards = parseInt(num_cards)
                 set_random_cards(num_cards, shuffle_list(list_gifs));
+                $card = document.getElementsByClassName('card')
+                $card = [...$card]
+                $card.map(card => card.addEventListener('click', select_card)) 
                 break;
             }
             else{
@@ -36,6 +40,27 @@ function init_game(){
         }
     }
 }
+
+
+function select_card(e){
+
+    let card = e.currentTarget
+    let child_card = card.childNodes
+
+    if(card.classList.contains('selected')){
+        child_card[0].style.transform = 'rotateY(0deg)'
+        child_card[1].style.transform = 'rotateY(180deg)'
+        card.classList.remove('selected')
+    }
+    else{
+        child_card[0].style.transform = 'rotateY(-180deg)'
+        child_card[1].style.transform = 'rotateY(0deg)'
+        card.classList.add('selected');
+    }
+}
+
+
+
 
 
 function getRandomIntInclusive(min, max) {
