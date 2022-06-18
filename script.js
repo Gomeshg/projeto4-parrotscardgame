@@ -54,7 +54,7 @@ async function condition_winner(){
     let final_time = format_final_time($clock.textContent)
     if ($win.length === num_cards){
         await sleep(1000)
-        alert(`Você ganhou em ${round} rodadas e em ${final_time['min']} minuto(s) e ${final_time['seg']} segundos!!!`)
+        alert(`Você ganhou em ${round} rodadas e em ${final_time}!`)
     }
 
 }
@@ -273,5 +273,24 @@ function format_final_time(time){
     let min = parseInt(box[0])
     let seg = parseInt(box[1])
 
-    return {'min': min, 'seg': seg}
+    if(min === 1){
+        min = `${min} minuto`
+    }
+    else if(min > 1){
+        min = `${min} minutos`
+    }
+
+    if(seg === 1){
+        seg = `${seg} segundo`
+    }
+    else if(seg != 1){
+        seg = `${seg} segundos`
+    }
+
+    if(min === 0){
+        return seg;
+    }
+    else{
+        return `${min} e ${seg}`
+    }
 }
