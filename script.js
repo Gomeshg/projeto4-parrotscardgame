@@ -1,4 +1,5 @@
 const $container = document.querySelector('.container');
+const $clock = document.querySelector('.clock')
 let $card = '';
 let _class = [];
 let _card;
@@ -26,11 +27,13 @@ function init_game(){
     while(true){
         num_cards = prompt('Com quantas cartas você quer jogar ? (Insira apenas números pares, de 4 a 14)')
 
+
+
         if(num_cards % 2 === 0){
             if(num_cards >= 4  && num_cards <= 14){
                 num_cards = parseInt(num_cards);
                 set_random_cards(num_cards, shuffle_list(list_gifs));
-                $card = get_value_from('card');
+                $card = get_reference_from('card');
                 add_eventGame($card, 'click', game);
                 add_eventGame($card, 'click', condition_winner)
                 break;
@@ -48,9 +51,10 @@ function init_game(){
 async function condition_winner(){
 
     let $win = document.getElementsByClassName('win')
+    let final_time = format_final_time($clock.textContent)
     if ($win.length === num_cards){
         await sleep(1000)
-        alert(`Você ganhou em ${round} rodadas !!!`)
+        alert(`Você ganhou em ${round} rodadas e em ${final_time['min']} minuto(s) e ${final_time['seg']} segundos!!!`)
     }
 
 }
@@ -102,7 +106,7 @@ function get_classe(card){
 }
 
 
-function get_value_from(card){
+function get_reference_from(card){
 
     let $card = document.getElementsByClassName(card)
     $card = [...$card]
@@ -237,36 +241,37 @@ function sleep(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
 
-// let clock = setInterval(time, 1000)
-// let minuto = 0;
-// let segundo = 0;
-// let ms = 0;
+let clock = setInterval(time, 1000)
+let min = 0;
+let seg = 0;
 
 
-// function time(){
+function time(){
 
-//     ms++;
+    seg++;
 
-//     if(ms === 1000){
-//         ms = 0;
-//         segundo++;
-//     }
-    
-//     else if(segundo === 60){
-//         segundo = 0;
-//         minuto++;
-//     }
+    if(seg === 60){
+        seg = 0;
+        min++;
+    }
 
-//     else if(minuto === 60){
-//         ms = 0;
-//         segundo = 0;
-//         minuto = 0;
-//     }
+    else if(min === 60){
+        seg = 0;
+        min = 0;
+    }
 
-//     console.log(`${formata_tempo(minuto)}:${formata_tempo(segundo)}:${formata_tempo(ms)}`)
-// }
+    $clock.textContent= `${format_time(min)}:${format_time(seg)}`
+}
 
+function format_time(time){
+    return time < 10 ? `0${time}`: time;
+}
 
-// function formata_tempo(tempo){
-//     return tempo < 10 ? `0${tempo}`: tempo;
-// }
+function format_final_time(time){
+
+    let box = time.split(':')
+    let min = parseInt(box[0])
+    let seg = parseInt(box[1])
+
+    return {'min': min, 'seg': seg}
+}
