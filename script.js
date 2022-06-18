@@ -45,14 +45,13 @@ function init_game(){
     }
 }
 
+
 async function condition_win(){
 
     await sleep(500)
     let $win = document.getElementsByClassName('win');
     let final_time = format_final_time($clock.textContent);
-    console.log(`${$win.length} === ${num_cards}`)
     if ($win.length === num_cards){
-        console.log('VOCÊ GANHOU!!!')
         await sleep(1000);
         alert(`Você ganhou em ${round} rodadas e em ${final_time}!`);
         remove_event($card, 'click', condition_win)
