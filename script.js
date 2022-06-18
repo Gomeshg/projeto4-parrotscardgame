@@ -20,6 +20,7 @@ let list_gifs = [
 
 window.onload = init_game;
 
+
 function init_game(){
 
     while(true){
@@ -29,9 +30,9 @@ function init_game(){
             if(num_cards >= 4  && num_cards <= 14){
                 num_cards = parseInt(num_cards);
                 set_random_cards(num_cards, shuffle_list(list_gifs));
-                $card = get_reference_from('card');
+                $card = get_elementsByClassName('card');
                 add_eventGame($card, 'click', game);
-                add_eventGame($card, 'click', condition_winner)
+                add_eventGame($card, 'click', condition_win)
                 break;
             }
             else{
@@ -44,8 +45,9 @@ function init_game(){
     }
 }
 
-async function condition_winner(){
+async function condition_win(){
 
+    await sleep(500)
     let $win = document.getElementsByClassName('win');
     let final_time = format_final_time($clock.textContent);
     if ($win.length === num_cards){
@@ -55,6 +57,7 @@ async function condition_winner(){
             let desire = prompt('Você deseja jogar novamente? (sim/não)');
             if(desire === 'sim'){
                 document.location.reload(true);
+                break;
             }
             else if( desire === 'não'){
                 alert('Obrigado por jogar com a gente!')
@@ -69,37 +72,44 @@ async function condition_winner(){
 
 
 async function game(e){
-    
-    round++;
+
     let card = e.currentTarget
     
     if(_class.length === 1){
-        if(_class[0] === get_classe(card)){
-            
-            gif_up(card)
+        
+        if(_class[0] === get_gifClasse(card)){
 
-            card.removeEventListener('click', game)
-            _card.removeEventListener('click', game)
-            card.classList.add('win')
-            _card.classList.add('win')
-
-            _class.pop()
-            _card = ''
+            if(get_gifType(_card) !== get_gifType(card)){
+                round++;
+                gif_up(card)
+    
+                card.removeEventListener('click', game)
+                _card.removeEventListener('click', game)
+                card.classList.add('win')
+                _card.classList.add('win')
+    
+                _class.pop()
+                _card = ''
+            }
         }
         else{
-            
+            round++;
+
             gif_up(card)   
-            
+
+            remove_eventGame($card, 'click', game)
             await sleep(1000)
             gif_down(_card) 
             gif_down(card) 
+            add_eventGame($card, 'click', game)
             
             _class.pop() 
             _card = ''
         }
     }
     else{
-        _class.push(get_classe(card))
+        round++;
+        _class.push(get_gifClasse(card))
         _card = card
 
         gif_up(card)        
@@ -107,15 +117,22 @@ async function game(e){
 }
 
 
-function get_classe(card){
+function get_gifClasse(card){
 
     let classe = card.getAttribute('class')
     classe = classe.split(' ')[1]
     return classe;
 }
 
+function get_gifType(card){
 
-function get_reference_from(card){
+    let classe = card.getAttribute('class')
+    classe = classe.split(' ')[2]
+    return classe;
+}
+
+
+function get_elementsByClassName(card){
 
     let $card = document.getElementsByClassName(card)
     $card = [...$card]
@@ -126,6 +143,11 @@ function get_reference_from(card){
 function add_eventGame(cards, event, action){
 
     cards.map( card => card.addEventListener(event, action))
+}
+
+function remove_eventGame(cards, event, action){
+
+    cards.map( card => card.removeEventListener(event, action))
 }
 
 
@@ -140,7 +162,6 @@ function gif_down(card){
     card = card.childNodes
     card[0].style.transform = 'rotateY(0deg)'
     card[1].style.transform = 'rotateY(180deg)'
-
 }
 
 
@@ -181,6 +202,7 @@ function set_random_cards(num_cards, list_gifs){
         let div_card_parrot1 = document.createElement('div');
         div_card_parrot1.classList.add('card')
         div_card_parrot1.classList.add(`${list_gifs[i]}`)
+        div_card_parrot1.classList.add('1')
 
         let front_card_parrot1 = document.createElement('div');
         front_card_parrot1.classList.add('face')
@@ -193,6 +215,7 @@ function set_random_cards(num_cards, list_gifs){
         let div_card_parrot2 = document.createElement('div');
         div_card_parrot2.classList.add('card')
         div_card_parrot2.classList.add(`${list_gifs[i]}`)
+        div_card_parrot1.classList.add('2')
 
         let front_card_parrot2 = document.createElement('div');
         front_card_parrot2.classList.add('face')
@@ -280,10 +303,10 @@ function format_final_time(time){
     }
 
     if(seg === 1){
-        seg = `${seg} segundo`
+        seg = `${seg+1} segundo`
     }
     else if(seg != 1){
-        seg = `${seg} segundos`
+        seg = `${seg+1} segundos`
     }
 
     if(min === 0){
