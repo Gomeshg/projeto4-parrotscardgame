@@ -31,8 +31,8 @@ function init_game(){
                 num_cards = parseInt(num_cards);
                 set_random_cards(num_cards, shuffle_list(list_gifs));
                 $card = get_elementsByClassName('card');
-                add_eventGame($card, 'click', game);
-                add_eventGame($card, 'click', condition_win)
+                add_event($card, 'click', game);
+                add_event($card, 'click', condition_win)
                 break;
             }
             else{
@@ -50,9 +50,13 @@ async function condition_win(){
     await sleep(500)
     let $win = document.getElementsByClassName('win');
     let final_time = format_final_time($clock.textContent);
+    console.log(`${$win.length} === ${num_cards}`)
     if ($win.length === num_cards){
+        console.log('VOCÊ GANHOU!!!')
         await sleep(1000);
         alert(`Você ganhou em ${round} rodadas e em ${final_time}!`);
+        remove_event($card, 'click', condition_win)
+
         while(true){
             let desire = prompt('Você deseja jogar novamente? (sim/não)');
             if(desire === 'sim'){
@@ -61,6 +65,7 @@ async function condition_win(){
             }
             else if( desire === 'não'){
                 alert('Obrigado por jogar com a gente!')
+                clearInterval(clock)
                 break;
             }
             else{
@@ -97,11 +102,11 @@ async function game(e){
 
             gif_up(card)   
 
-            remove_eventGame($card, 'click', game)
+            remove_event($card, 'click', game)
             await sleep(1000)
             gif_down(_card) 
             gif_down(card) 
-            add_eventGame($card, 'click', game)
+            add_event($card, 'click', game)
             
             _class.pop() 
             _card = ''
@@ -140,12 +145,12 @@ function get_elementsByClassName(card){
 }
 
 
-function add_eventGame(cards, event, action){
+function add_event(cards, event, action){
 
     cards.map( card => card.addEventListener(event, action))
 }
 
-function remove_eventGame(cards, event, action){
+function remove_event(cards, event, action){
 
     cards.map( card => card.removeEventListener(event, action))
 }
