@@ -28,12 +28,11 @@ function init_game(){
 
         if(num_cards % 2 === 0){
             if(num_cards >= 4  && num_cards <= 14){
-                num_cards = parseInt(num_cards)
+                num_cards = parseInt(num_cards);
                 set_random_cards(num_cards, shuffle_list(list_gifs));
-                $card = document.getElementsByClassName('card')
-                $card = [...$card]
-                // $card.map(card => card.addEventListener('click', select_card)) 
-                $card.map(card => card.addEventListener('click', game))
+                $card = get_value_from('card');
+                add_eventGame($card, 'click', game);
+                add_eventGame($card, 'click', condition_winner)
                 break;
             }
             else{
@@ -46,6 +45,15 @@ function init_game(){
     }
 }
 
+async function condition_winner(){
+
+    let $win = document.getElementsByClassName('win')
+    if ($win.length === num_cards){
+        await sleep(1000)
+        alert(`Você ganhou em ${round} rodadas !!!`)
+    }
+
+}
 
 async function game(e){
     
@@ -59,6 +67,8 @@ async function game(e){
 
             card.removeEventListener('click', game)
             _card.removeEventListener('click', game)
+            card.classList.add('win')
+            _card.classList.add('win')
 
             _class.pop()
             _card = ''
@@ -89,6 +99,19 @@ function get_classe(card){
     let classe = card.getAttribute('class')
     classe = classe.split(' ')[1]
     return classe;
+}
+
+
+function get_value_from(card){
+
+    let $card = document.getElementsByClassName(card)
+    $card = [...$card]
+    return $card;
+}
+
+function add_eventGame(cards, event, action){
+
+    cards.map( card => card.addEventListener(event, action))
 }
 
 
@@ -213,3 +236,37 @@ function set_random_cards(num_cards, list_gifs){
 function sleep(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
+
+// let clock = setInterval(time, 1000)
+// let minuto = 0;
+// let segundo = 0;
+// let ms = 0;
+
+
+// function time(){
+
+//     ms++;
+
+//     if(ms === 1000){
+//         ms = 0;
+//         segundo++;
+//     }
+    
+//     else if(segundo === 60){
+//         segundo = 0;
+//         minuto++;
+//     }
+
+//     else if(minuto === 60){
+//         ms = 0;
+//         segundo = 0;
+//         minuto = 0;
+//     }
+
+//     console.log(`${formata_tempo(minuto)}:${formata_tempo(segundo)}:${formata_tempo(ms)}`)
+// }
+
+
+// function formata_tempo(tempo){
+//     return tempo < 10 ? `0${tempo}`: tempo;
+// }
