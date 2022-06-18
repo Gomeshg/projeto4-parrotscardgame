@@ -1,10 +1,10 @@
 const $container = document.querySelector('.container');
 const $clock = document.querySelector('.clock')
+
 let $card = '';
 let _class = [];
-let _card;
+let _card = '';
 let round = 0;
-
 let num_cards = 0;
 let final_list = []
 let list_gifs = [
@@ -20,14 +20,10 @@ let list_gifs = [
 
 window.onload = init_game;
 
-
 function init_game(){
 
-    
     while(true){
         num_cards = prompt('Com quantas cartas você quer jogar ? (Insira apenas números pares, de 4 a 14)')
-
-
 
         if(num_cards % 2 === 0){
             if(num_cards >= 4  && num_cards <= 14){
@@ -50,14 +46,27 @@ function init_game(){
 
 async function condition_winner(){
 
-    let $win = document.getElementsByClassName('win')
-    let final_time = format_final_time($clock.textContent)
+    let $win = document.getElementsByClassName('win');
+    let final_time = format_final_time($clock.textContent);
     if ($win.length === num_cards){
-        await sleep(1000)
-        alert(`Você ganhou em ${round} rodadas e em ${final_time}!`)
+        await sleep(1000);
+        alert(`Você ganhou em ${round} rodadas e em ${final_time}!`);
+        while(true){
+            let desire = prompt('Você deseja jogar novamente? (sim/não)');
+            if(desire === 'sim'){
+                document.location.reload(true);
+            }
+            else if( desire === 'não'){
+                alert('Obrigado por jogar com a gente!')
+                break;
+            }
+            else{
+                alert("Digite apenas 'sim' ou 'não', quaisquer dígitos diferentes não serão aceitos! ")
+            }
+        }
     }
-
 }
+
 
 async function game(e){
     
@@ -113,6 +122,7 @@ function get_reference_from(card){
     return $card;
 }
 
+
 function add_eventGame(cards, event, action){
 
     cards.map( card => card.addEventListener(event, action))
@@ -125,26 +135,13 @@ function gif_up(card){
     card[1].style.transform = 'rotateY(0deg)'
 }
 
+
 function gif_down(card){
     card = card.childNodes
     card[0].style.transform = 'rotateY(0deg)'
     card[1].style.transform = 'rotateY(180deg)'
 
 }
-
-// function select_card(e){
-
-//     let card = e.currentTarget
-
-//     if(card.classList.contains('selected')){
-//         front_card_up(card)
-//         card.classList.remove('selected')
-//     }
-//     else{
-//         back_card_up(card)
-//         card.classList.add('selected');
-//     }
-// }
 
 
 function getRandomIntInclusive(min, max) {
@@ -236,10 +233,10 @@ function set_random_cards(num_cards, list_gifs){
 }
 
 
-
 function sleep(milliseconds) {
     return new Promise(resolve => setTimeout(resolve, milliseconds))
 }
+
 
 let clock = setInterval(time, 1000)
 let min = 0;
@@ -263,9 +260,11 @@ function time(){
     $clock.textContent= `${format_time(min)}:${format_time(seg)}`
 }
 
+
 function format_time(time){
     return time < 10 ? `0${time}`: time;
 }
+
 
 function format_final_time(time){
 
