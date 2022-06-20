@@ -47,14 +47,13 @@ function init_game(){
 
 
 async function condition_win(){
-
     await sleep(500)
     let $win = document.getElementsByClassName('win');
     let final_time = format_final_time($clock.textContent);
     if ($win.length === num_cards){
+        remove_event($card, 'click', condition_win)
         await sleep(1000);
         alert(`Você ganhou em ${round} rodadas e em ${final_time}!`);
-        remove_event($card, 'click', condition_win)
 
         while(true){
             let desire = prompt('Você deseja jogar novamente? (sim/não)');
@@ -257,6 +256,7 @@ function set_random_cards(num_cards, list_gifs){
     
     random_list.push(shuffle_list(list_gif))
     random_list[0].map( element => $container.appendChild(element)) 
+
 }
 
 

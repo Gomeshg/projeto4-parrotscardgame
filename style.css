@@ -18,12 +18,13 @@ h1{
     width: 84%;
     margin: 0 auto;
     padding: 40px;
+
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: center; 
     flex-wrap: wrap;
 
-    gap: 40px 40px;
+    gap: 30px 50px;
 }
 
 .card{
@@ -31,11 +32,12 @@ h1{
     min-height: 146px;
     width: 117px;
     height: 146px;
-    position: relative;
     
+    position: relative;
 }
 
 .face{
+    
     border: 1px solid #99CEA8;
     border-radius: 5px;
 
@@ -52,7 +54,6 @@ h1{
     transition: all .5s;
     transform-style: preserve-3d;
 }
-
 
 .back_card{
     transform: rotateY(180deg);
@@ -86,10 +87,14 @@ img{
 }
 
 
-@media (max-width: 780px){
-    
+@media screen and (min-width: 768px) and (max-width: 1023px ){
+
     .container{
         width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-wrap: wrap;
     }
 
     .clock{
@@ -98,13 +103,23 @@ img{
     }
 }
 
-@media (max-width: 490px){
+@media screen and (max-width: 767px){
+    
+    .container{
+        
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
     
     h1{
         font-size: 36px;
         line-height: 42.19px;
     }
     .clock{
+        margin: 10px auto 0px auto;
+        position: inherit;
         height: 100px;
         width: 100px;
         font-size: 20px
